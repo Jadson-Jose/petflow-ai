@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "apps.accounts",
     "apps.tenants",
     "apps.core",
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     "apps.plans",
     "apps.subscriptions",
     "apps.appointments",
+    "rest_framework",
 ]
 
 
@@ -59,10 +59,9 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "apps.tenants.middleware.TenantMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
-    "apps.core.middleware.TenantMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

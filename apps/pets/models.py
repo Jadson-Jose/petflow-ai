@@ -130,7 +130,7 @@ class Pet(BaseModel):
     )
 
     owner = models.ForeignKey(
-        "Owner",
+        "pets.Owner",
         on_delete=models.PROTECT,
         related_name="pets",
     )
