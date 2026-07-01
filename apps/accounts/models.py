@@ -10,6 +10,12 @@ class UserRole(models.TextChoices):
     VIEWER = "viewer", "Viewer"
 
 
+class UserStatus(models.TextChoices):
+    ACTIVE = "active", "Active"
+    INACTIVE = "inactive", "Inactive"
+    SUSPENDED = "suspended", "Suspended"
+
+
 class User(AbstractUser):
     id = models.UUIDField(
         primary_key=True,
@@ -33,6 +39,12 @@ class User(AbstractUser):
         max_length=20,
         choices=UserRole.choices,
         default=UserRole.STAFF,
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=UserStatus.choices,
+        default=UserStatus.ACTIVE,
     )
 
     created_at = models.DateTimeField(

@@ -8,6 +8,12 @@ def pet_photo_path(instance, filename):
     return f"tenants/{instance.tenant_id}/pets/{instance.id}/{filename}"
 
 
+class OwnerStatus(models.TextChoices):
+    ACTIVE = "active", "Active"
+    INACTIVE = "inactive", "Inactive"
+    ANONYMIZED = "anonymized", "Anonymized"
+
+
 class SpeciesChoices(models.TextChoices):
     DOG = "DOG", "Dog"
     CAT = "CAT", "Cat"
@@ -36,6 +42,12 @@ class Owner(BaseModel):
         max_length=14,
         blank=True,
         default="",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=OwnerStatus.choices,
+        default=OwnerStatus.ACTIVE,
     )
 
     objects = TenantManager()
