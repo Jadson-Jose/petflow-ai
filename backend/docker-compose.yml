@@ -1,0 +1,106 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: petflow-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-petflow}
+      POSTGRES_USER: ${POSTGRES_USER:-petflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-petflow}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-petflow}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - petflow_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: petflow-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - petflow_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: petflow-web
+    restart: unless-stopped
+    command: uv run gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload
+    volumes:
+      - .:/app
+      - /app/.venv
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - petflow_network
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: petflow-celery-worker
+    restart: unless-stopped
+    command: sh scripts/run_celery.sh
+    volumes:
+      - .:/app
+      - /app/.venv
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - petflow_network
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: petflow-celery-beat
+    restart: unless-stopped
+    command: uv run celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+      - /app/.venv
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - petflow_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  petflow_network:
+    driver: bridge
