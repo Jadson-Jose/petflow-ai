@@ -1,0 +1,14 @@
+{% extends "notifications/emails/base_email.html" %}
+
+{% block content %}
+    <h2 style="color: #333; margin-top: 0;">Olá, {{ owner_name }}!</h2>
+    <p>Seu pet <strong>{{ pet_name }}</strong> tem um agendamento se aproximando.</p>
+    <table cellpadding="0" cellspacing="0" style="margin: 16px 0; background: #f9f9f9; padding: 16px; border-radius: 6px; width: 100%;">
+        <tr>
+            <td style="padding: 6px 0;"><strong>Serviço:</strong> {{ service_name }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 0;"><strong>Data e hora:</strong> {{ start_time }}</td>
+        </tr>
+    </table>
+    <p>Estamos ansiosos para atendê-lo!</p>
