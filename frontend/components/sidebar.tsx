@@ -10,6 +10,7 @@ import {
   Package,
   Bell,
   Brain,
+  Crown,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const menuItems = [
   { href: "/inventory", label: "Estoque", icon: Package },
   { href: "/notifications", label: "Notificações", icon: Bell },
   { href: "/ai", label: "IA", icon: Brain },
+  { href: "/plans", label: "Planos", icon: Crown },
 ];
 
 export function Sidebar() {

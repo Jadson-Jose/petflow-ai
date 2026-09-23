@@ -115,3 +115,45 @@ export interface Notification {
   created_at: string;
   sent_at: string | null;
 }
+
+// ===== Planos =====
+export interface Plan {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  plan_type: "FREE" | "BRONZE" | "SILVER" | "GOLD";
+  price_monthly: string;
+  price_yearly: string;
+  max_users: number;
+  max_pets: number;
+  max_appointments_month: number;
+  max_products: number;
+  max_ai_predictions_month: number;
+  has_ai_churn: boolean;
+  has_ai_forecast: boolean;
+  has_reports: boolean;
+  has_api_access: boolean;
+  has_whatsapp: boolean;
+  has_custom_domain: boolean;
+  trial_days: number;
+  order: number;
+  is_active: boolean;
+  is_public: boolean;
+  is_free: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  plan: Plan;
+  plan_slug: string;
+  status: "TRIAL" | "ACTIVE" | "PAST_DUE" | "CANCELED" | "EXPIRED";
+  trial_start: string | null;
+  trial_end: string | null;
+  trial_days_remaining: number;
+  current_period_start: string;
+  current_period_end: string | null;
+  canceled_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
