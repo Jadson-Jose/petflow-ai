@@ -17,6 +17,7 @@ class TenantMiddleware:
         "/api/token/",
         "/api/schema/",
         "/api/docs/",
+        "/api/plans/",
     )
 
     def __init__(self, get_response):
